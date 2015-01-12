@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link href='http://fonts.googleapis.com/css?family=Josefin+Sans:100' rel='stylesheet' type='text/css'>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <style>
+      .prompt {
+        /*background-color: lightgray;*/
+        font-family: 'Josefin Sans', sans-serif;
+        font-size: 48px;
+        text-align: center;
+        width: 70%;
+      }
+
+      .chosenGames {
+        font-family: 'Josefin Sans', sans-serif;
+        font-size: 22px;
+        color: black;
+        text-align: center;
+      }
+
+      .gamesayerImage {
+        font-family: 'Josefin Sans', sans-serif;
+        font-size: 48px;
+        text-align: center;
+      }
+
+      input[type='text'] {
+        /*background-color: lightgray;*/
+        font-family: 'Josefin Sans', sans-serif;
+        font-size: 24px;
+      }
+
+      .ui-autocomplete {
+          position: absolute;
+          font-family: 'Josefin Sans', sans-serif;
+          top: 100%;
+          left: 0;
+          z-index: 1000;
+          float: center;
+          display: none;
+          min-width: 160px;
+          /*max-width: 400px;*/
+          padding: 6px 0;
+          margin: 0 0 10px 25px;
+          list-style: none;
+          background-color: #DAA984;
+          border-color: #ccc;
+          border-color: white;
+          border-style: solid;
+          border-width: 0px;
+          -webkit-border-radius: 0px;
+          -moz-border-radius: 0px;
+          border-radius: 0px;
+          -webkit-box-shadow: none;
+          -moz-box-shadow: none;
+          box-shadow: none;
+          -webkit-background-clip: padding-box;
+          -moz-background-clip: padding;
+          background-clip: padding-box;
+          *border-right-width: 0px;
+          *border-bottom-width: 0px;
+          text-align: center;
+      }
+
+      .ui-state-hover, .ui-autocomplete li:hover {
+          color:black;
+      }
+
+      .ui-menu .ui-menu-item {
+          background:#DAA984;
+          height:30px;
+          font-size:24px;
+          color:white;
+      }
+
+      .ui-helper-hidden-accessible { display:none; }
+
+    </style>
+  </head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <center>
+  <div class=prompt id="prompt">
+    I am the <span style="color:black;">Gamesayer</span>. Give me three games and I will say which game is most related to them.
+  </div>
+  <div class=gamesayerImage><br><img src="{{ url_for('static', filename = 'the_gamesayer.png') }}" alt="" id="gamesayerImage" style="height:400px"><br></div>
+  <div class=chosenGames id="chosenGames"><br><br></div>
+  <script type ="application/javascript" src="{{ url_for('static', filename = 'games.json') }}" charset="utf-8"></script>
+  <!-- <script type ="application/javascript" src="games.json" charset="utf-8"></script> -->
+    <!-- Requires jQuery -->
+    <div class="searcher"><center>
+      <b>
+        <input id="tags" type="text" placeholder="" name="code", 
+        style="width: 600px; height: 40px; border: 0; background: #EEEEEE; text-align: center">
+        <script>
+            $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+            $(document).ready(function() {
+                var chosenGameIDs = Array();
+                function gamesay(mostRelatedGame) {
+                  // change the Gamesayer to the speaking image
+                  document.getElementById("gamesayerImage").src = "{{ url_for('static', filename = 'the_gamesayer_speaking.png') }}";
+                  // display the most related game
+                  document.getElementById("prompt").innerHTML = '<br>' + mostRelatedGame.title;
+                  // change the Gamesayer back to the default image
+                  setTimeout(function(){document.getElementById("gamesayerImage").src = "{{ url_for('static', filename = 'the_gamesayer.png') }}";}, 800);
+                };
+                $(function() {
+                    $("#tags").autocomplete({
+                        maxResults: 10,
+                        source: function(request, response) {
+                            var results = $.ui.autocomplete.filter(games_list, request.term);
+                            response(results.slice(0, this.options.maxResults));
+                        },
+                        messages: {
+                            noResults: '',
+                            results: function() {}
+                        },
+                        focus: function(event, ui) {
+                            // prevent autocomplete from updating the textbox
+                            event.preventDefault();
+                            // manually update the textbox
+                            $(this).val(ui.item.label);
+                        },
+                        select: function(event, ui) {
+                            // prevent autocomplete from updating the textbox
+                            event.preventDefault();
+                            var selectedGameTitle = ui.item.label.split(' (')[0];
+                            var selectedGameID = ui.item.id;
+                            if (chosenGameIDs.length == 0)
+                              document.getElementById("chosenGames").innerHTML = selectedGameTitle + '<br><br>';
+                            else {
+                              selectedGamesStr = document.getElementById("chosenGames").innerHTML;
+                              document.getElementById("chosenGames").innerHTML = selectedGamesStr.slice(0, -8) + '&nbsp;&nbsp;+&nbsp;&nbsp;' + selectedGameTitle + '<br><br>';
+                            }
+                            chosenGameIDs.push(selectedGameID);
+                            if (chosenGameIDs.length === 3) {
+                              query = "/chosenGames=" + chosenGameIDs[0] + '+' + chosenGameIDs[1] + '+' + chosenGameIDs[2];
+                              $.getJSON($SCRIPT_ROOT + query, {}, function(data) {
+                                 gamesay(mostRelatedGame=data);
+                              });
+                              // remove the prompt text
+                              document.getElementById("prompt").innerHTML = '<br><br>';
+                              // // fade out the prompt text
+                              // $(".prompt").fadeOut();
+                              // change the Gamesayer to the thinking image
+                              document.getElementById("gamesayerImage").src = "{{ url_for('static', filename = 'the_gamesayer_thinking.png') }}";
+                            };
+                            this.value = "";
+                            return false;
+                        }
+                    });
+                });
+            });
+        </script>
+        <script>
+        $("input.submit").click(function(e){
+            $.post( "/save", {name: $("input.name").val(), time: "2pm"});
+        });
+        </script>
+    </b>
+    </div>
+</html>
