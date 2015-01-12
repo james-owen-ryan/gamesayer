@@ -5,3 +5,4 @@ backend/pip-selfcheck.json
 backend/include
 backend/bin
 backend/lib
+backend/env
