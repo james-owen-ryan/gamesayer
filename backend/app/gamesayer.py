@@ -41,7 +41,7 @@ class Gamesayer(object):
     def load_database():
         """Load the database of game representations from a TSV file."""
         database = []
-        with open('static/game_lsa_vectors.tsv', 'r') as tsvfile:
+        with open('app/static/game_lsa_vectors.tsv', 'r') as tsvfile:
             reader = csv.reader(tsvfile, delimiter='\t')
             for row in reader:
                 game_id, title, year, vector = row
