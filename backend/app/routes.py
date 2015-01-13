@@ -16,4 +16,4 @@ def gamesay(chosen_game_ids):
     return jsonify(game_id=game_id, title=title, year=year)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
