@@ -1,7 +1,19 @@
 <!DOCTYPE HTML>
 <html>
   <head>
+    <! -- Load Google font -->
     <link href='http://fonts.googleapis.com/css?family=Josefin+Sans:100' rel='stylesheet' type='text/css'>
+    <! -- Load favicon and other icons -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.ico') }}" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename = 'apple-touch-icon.png') }}" />
+    <link rel="apple-touch-icon" sizes="57x57" href="{{ url_for('static', filename = 'apple-touch-icon-57x57.png') }}" />
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ url_for('static', filename = 'apple-touch-icon-72x72.png') }}" />
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ url_for('static', filename = 'apple-touch-icon-76x76.png') }}" />
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ url_for('static', filename = 'apple-touch-icon-114x114.png') }}" />
+    <link rel="apple-touch-icon" sizes="120x120" href="{{ url_for('static', filename = 'apple-touch-icon-120x120.png') }}" />
+    <link rel="apple-touch-icon" sizes="144x144" href="{{ url_for('static', filename = 'apple-touch-icon-144x144.png') }}" />
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ url_for('static', filename = 'apple-touch-icon-152x152.png') }}" />
+    <! -- Load jQuery -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
@@ -137,13 +149,13 @@
                             chosenGameIDs.push(selectedGameID);
                             if (chosenGameIDs.length === 3) {
                               query = "/chosenGames=" + chosenGameIDs[0] + '+' + chosenGameIDs[1] + '+' + chosenGameIDs[2];
-                              $.getJSON($SCRIPT_ROOT + query, {}, function(data) {
-                                 gamesay(mostRelatedGame=data);
-                              });
                               // remove the prompt text
                               document.getElementById("prompt").innerHTML = '<br><br>';
                               // // fade out the prompt text
                               // $(".prompt").fadeOut();
+                              $.getJSON($SCRIPT_ROOT + query, {}, function(data) {
+                                 gamesay(mostRelatedGame=data);
+                              });
                               // change the Gamesayer to the thinking image
                               document.getElementById("gamesayerImage").src = "{{ url_for('static', filename = 'the_gamesayer_thinking.png') }}";
                             };
