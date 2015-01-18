@@ -16,13 +16,18 @@ class Gamesayer(object):
         return self.most_related_game
 
     def get_most_related_game(self, chosen_game_ids):
-        """Get the most-related game to the user's chosen games."""
+        """Get the most-related game to the user's chosen games.
+
+        This is determined by taking each game in the database that is not one of the
+        selected games and getting its average cosine similarity with each of the selected
+        games -- the most related game is then the game with the highest such average.
+        """
         chosen_game_ids = chosen_game_ids.split('+')
         chosen_game_ids = [int(game_id) for game_id in chosen_game_ids]
         chosen_games = [self.database[game_id] for game_id in chosen_game_ids]
         cumulative_scores_for_each_game_relative_to_the_chosen_games = {}
         for game in self.database:
-            game_id = int(game[0])
+            game_id = int(game.id)
             if game_id not in chosen_game_ids:
                 scores = []
                 for chosen_game in chosen_games:
@@ -34,16 +39,14 @@ class Gamesayer(object):
                 key=lambda g: cumulative_scores_for_each_game_relative_to_the_chosen_games[g])
         )
         most_related_game = self.database[id_of_most_related_game]
-        return most_related_game[:3]  # ID, title, year only
+        return most_related_game
 
     @staticmethod
     def lsa_score(game1, game2):
         """Return a cosine similarity score for a pair of games."""
-        game1_lsa_vector = game1[-1]
-        game2_lsa_vector = game2[-1]
         cosine_between_the_games_lsa_vectors = (
-            numpy.dot(game1_lsa_vector, game2_lsa_vector) /
-            numpy.linalg.norm(game1_lsa_vector) /
-            numpy.linalg.norm(game2_lsa_vector)
+            numpy.dot(game1.lsa_vector, game2.lsa_vector) /
+            numpy.linalg.norm(game1.lsa_vector) /
+            numpy.linalg.norm(game2.lsa_vector)
         )
         return cosine_between_the_games_lsa_vectors
