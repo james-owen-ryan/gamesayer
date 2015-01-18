@@ -6,7 +6,7 @@ class Game(object):
         self.id = game_id
         self.title = title.decode('utf-8')
         self.lsa_vector = self.parse_lsa_vector_str(lsa_vector_str)
-        self.gamenet_link = self.get_gamenet_url(game_id, title)
+        self.gamenet_link = self.get_link_to_gamenet_entry(game_id, title)
 
     @staticmethod
     def parse_lsa_vector_str(lsa_vector_str):
