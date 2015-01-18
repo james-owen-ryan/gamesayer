@@ -25,26 +25,22 @@
         text-align: center;
         width: 70%;
       }
-
       .chosenGames {
         font-family: 'Josefin Sans', sans-serif;
         font-size: 22px;
         color: black;
         text-align: center;
       }
-
       .gamesayerImage {
         font-family: 'Josefin Sans', sans-serif;
         font-size: 48px;
         text-align: center;
       }
-
       input[type='text'] {
         /*background-color: lightgray;*/
         font-family: 'Josefin Sans', sans-serif;
         font-size: 24px;
       }
-
       .ui-autocomplete {
           position: absolute;
           font-family: 'Josefin Sans', sans-serif;
@@ -76,35 +72,30 @@
           *border-bottom-width: 0px;
           text-align: center;
       }
-
       .ui-state-hover, .ui-autocomplete li:hover {
           color:black;
       }
-
       .ui-menu .ui-menu-item {
           background:#DAA984;
           height:30px;
           font-size:24px;
           color:white;
       }
-
       .ui-helper-hidden-accessible { display:none; }
-
     </style>
   </head>
   <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
   <center>
   <div class=prompt id="prompt">
-    I am the <span style="color:black;">Gamesayer</span>.
+    I am the Gamesayer. Give me three games, and I will tell you which game is most related to them.
   </div>
   <div class=gamesayerImage><br><img src="{{ url_for('static', filename = 'the_gamesayer.png') }}" alt="" id="gamesayerImage" style="height:400px"><br></div>
   <div class=chosenGames id="chosenGames"><br><br></div>
-  <script type ="application/javascript" src="{{ url_for('static', filename = 'games.json') }}" charset="utf-8"></script>
-  <!-- <script type ="application/javascript" src="games.json" charset="utf-8"></script> -->
+  <script type ="application/javascript" src="{{ url_for('static', filename = 'gamesDataForAutocomplete.json') }}" charset="utf-8"></script>
     <!-- Requires jQuery -->
     <div class="searcher"><center>
       <b>
-        <input id="tags" type="text" placeholder="" name="code", 
+        <input id="tags" type="text" placeholder="" name="code",
         style="width: 600px; height: 40px; border: 0; background: #EEEEEE; text-align: center">
         <script>
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
