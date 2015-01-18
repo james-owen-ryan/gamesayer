@@ -1,4 +1,3 @@
-import csv
 import numpy
 
 
@@ -7,9 +6,9 @@ class Gamesayer(object):
     related to a group of user-chosen games.
     """
 
-    def __init__(self, chosen_game_ids):
-        """Initialize the Gamesayer object."""
-        self.database = self.load_database()
+    def __init__(self, database, chosen_game_ids):
+        """Initialize a Gamesayer object."""
+        self.database = database
         self.most_related_game = self.get_most_related_game(chosen_game_ids=chosen_game_ids)
 
     def gamesay(self):
@@ -36,18 +35,6 @@ class Gamesayer(object):
         )
         most_related_game = self.database[id_of_most_related_game]
         return most_related_game[:3]  # ID, title, year only
-
-    @staticmethod
-    def load_database():
-        """Load the database of game representations from a TSV file."""
-        database = []
-        with open('static/game_lsa_vectors.tsv', 'r') as tsvfile:
-            reader = csv.reader(tsvfile, delimiter='\t')
-            for row in reader:
-                game_id, title, year, vector = row
-                vector = [float(i) for i in vector.split(',')[1:]]  # Exclude first dimension
-                database.append((game_id, title, year, vector))
-        return database
 
     @staticmethod
     def lsa_score(game1, game2):
