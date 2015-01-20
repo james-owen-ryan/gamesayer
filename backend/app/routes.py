@@ -30,3 +30,11 @@ def load_database():
 if __name__ == '__main__':
     app.database = load_database()
     app.run(debug=False)
+else:
+    app.database = load_database()
+
+if not app.debug:
+    import logging
+    file_handler = logging.FileHandler('gamesayer.log')
+    file_handler.setLevel(logging.WARNING)
+    app.logger.addHandler(file_handler)

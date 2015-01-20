@@ -6,3 +6,4 @@ backend/include
 backend/bin
 backend/lib
 backend/app/env
+*.pyc
