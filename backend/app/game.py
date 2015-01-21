@@ -10,6 +10,7 @@ class Game(object):
 
     @staticmethod
     def parse_lsa_vector_str(lsa_vector_str):
+        """Parse a string specifying an LSA vector to return a list representation of it."""
         lsa_vector = [float(i) for i in lsa_vector_str.split(',')[1:]]  # Exclude first dimension
         return lsa_vector
 
